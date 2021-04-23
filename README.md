@@ -1,3 +1,3 @@
-# Cardano Base Image (Ubuntu)
+# Cardano Base Images (Ubuntu)
 
 tbd
