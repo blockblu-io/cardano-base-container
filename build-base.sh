@@ -32,8 +32,6 @@ docker build -f Base.Dockerfile \
 
 docker push "adalove/ubuntu:$1_arm64"
 
-docker manifest rm "adalove/ubuntu:$1"
-
 docker manifest create "adalove/ubuntu:$1" \
 	"adalove/ubuntu:$1_amd64" \
 	"adalove/ubuntu:$1_arm" \

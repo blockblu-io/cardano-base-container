@@ -24,8 +24,6 @@ docker build -f GIT.Dockerfile \
 
 docker push "adalove/ubuntu:git_arm64"
 
-docker manifest rm "adalove/ubuntu:git"
-
 docker manifest create "adalove/ubuntu:git" \
 	"adalove/ubuntu:git_amd64" \
 	"adalove/ubuntu:git_arm" \

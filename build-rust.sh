@@ -43,8 +43,6 @@ docker build -f Rust.Dockerfile \
 
 docker push "adalove/ubuntu:$1-rust$2_arm64"
 
-docker manifest rm "adalove/ubuntu:$1-rust$2"
-
 docker manifest create "adalove/ubuntu:$1-rust$2" \
 	"adalove/ubuntu:$1-rust$2_amd64" \
 	"adalove/ubuntu:$1-rust$2_arm" \
