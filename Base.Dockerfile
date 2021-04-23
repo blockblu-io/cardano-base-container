@@ -1,5 +1,5 @@
 ARG C_UBUNTU_IMG
-FROM alpine/git AS cloner
+FROM adalove/ubuntu:git AS cloner
 
 WORKDIR /
 RUN git clone https://github.com/input-output-hk/libsodium.git && \

@@ -13,4 +13,43 @@ if [ $FAIL -ne 0 ]; then
     exit 1
 fi
 
-docker build -f Rust.Dockerfile --build-arg C_UBUNTU_IMG=$1 --build-arg RUST_VERSION=$2 --no-cache --pull -t "adalove/ubuntu:$1-rust$2" .
+docker build -f Rust.Dockerfile \
+    --platform linux/amd64 \
+    --build-arg C_UBUNTU_IMG=$1 \
+    --build-arg RUST_VERSION=$2 \
+    --no-cache \
+    --pull \
+    -t "adalove/ubuntu:$1-rust$2_amd64" .
+
+docker push "adalove/ubuntu:$1-rust$2_amd64"
+
+docker build -f Rust.Dockerfile \
+    --platform linux/arm/v7 \
+    --build-arg C_UBUNTU_IMG=$1 \
+    --build-arg RUST_VERSION=$2 \
+    --no-cache \
+    --pull \
+    -t "adalove/ubuntu:$1-rust$2_arm" .
+
+docker push "adalove/ubuntu:$1-rust$2_arm"
+
+docker build -f Rust.Dockerfile \
+    --platform linux/arm64/v8 \
+    --build-arg C_UBUNTU_IMG=$1 \
+    --build-arg RUST_VERSION=$2 \
+    --no-cache \
+    --pull \
+    -t "adalove/ubuntu:$1-rust$2_arm64" .
+
+docker push "adalove/ubuntu:$1-rust$2_arm64"
+
+docker manifest rm "adalove/ubuntu:$1-rust$2"
+
+docker manifest create "adalove/ubuntu:$1-rust$2" \
+	"adalove/ubuntu:$1-rust$2_amd64" \
+	"adalove/ubuntu:$1-rust$2_arm" \
+	"adalove/ubuntu:$1-rust$2_arm64"
+
+docker manifest push --purge "adalove/ubuntu:$1-rust$2"
+
+exit 0
