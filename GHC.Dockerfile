@@ -6,17 +6,8 @@ ARG GHC_VERSION
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
-		gnupg && \
-	rm -rf /var/lib/apt/lists/*
-
-RUN echo "deb http://ppa.launchpad.net/hvr/ghc/ubuntu $(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d= -f2 | xargs) main" | tee -a /etc/apt/sources.list && \
-	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 063DAB2BDC0B3F9FCEBC378BFF3AEACEF6F88286 && \
-	apt-get update && \
-	apt-get install -y --no-install-recommends \
-		cabal-install-${CABAL_VERSION} \
-		ghc-${GHC_VERSION} \
-		ghc-${GHC_VERSION}-dyn \
-		ghc-${GHC_VERSION}-prof \
+		ghc \
+		cabal-install \
 		git \
 		g++ \
 		curl \
@@ -26,10 +17,26 @@ RUN echo "deb http://ppa.launchpad.net/hvr/ghc/ubuntu $(cat /etc/lsb-release | g
 		libssl-dev \
 		libsystemd-dev \
 		libtinfo-dev \
+		python3 \
 		zlib1g-dev && \
 	rm -rf /var/lib/apt/lists/*
 
-ENV PATH="${PATH}:/opt/ghc/bin"
+RUN cabal v2-update && \
+	echo "" | cabal new-repl -w ghc-8.6.5 --build-dep fail && \
+	cabal v2-install cabal-install --constraint "cabal == ${CABAL_VERSION}.0.0" && \
+	cabal v2-install alex happy --constraint 'happy == 1.19.12'
+
+ENV PATH="/root/.cabal/bin:${PATH}"
+
+RUN git clone https://gitlab.haskell.org/ghc/ghc.git && \
+	cd ghc && \
+	git fetch --all --tags && \
+    git checkout tags/ghc-$GHC_VERSION-release --quiet && \
+	git submodule update --init && \
+	./boot && \
+	./configure && \
+	make && \
+	make install
 
 # Documentation
 LABEL maintainer="Kevin Haller <keivn.haller@outofbits.com>"
