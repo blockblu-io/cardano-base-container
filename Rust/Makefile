@@ -47,4 +47,4 @@ manifest-latest:
 		"adalove/ubuntu:${UBUNTU}-rust${RUST}_arm64"
 	docker manifest push --purge "adalove/ubuntu:rust"
 
-all: arm64 manifest
+all: amd64 arm arm64 manifest
