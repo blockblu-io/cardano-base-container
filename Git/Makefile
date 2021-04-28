@@ -29,3 +29,5 @@ manifest-latest:
 		"adalove/ubuntu:git_arm" \
 		"adalove/ubuntu:git_arm64"
 	docker manifest push --purge "adalove/ubuntu:git"
+
+all: amd64 arm arm64 manifest-latest
