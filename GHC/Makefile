@@ -38,4 +38,16 @@ manifest:
 		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
 	docker manifest push --purge "adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}"
 
+manifest-latest:
+	docker manifest create "adalove/ubuntu:${UBUNTU}-ghc" \
+		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
+		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm" \
+		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
+	docker manifest push --purge "adalove/ubuntu:${UBUNTU}-ghc"
+	docker manifest create "adalove/ubuntu:ghc" \
+		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
+		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm" \
+		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
+	docker manifest push --purge "adalove/ubuntu:ghc"
+
 all: amd64 arm arm64 manifest
