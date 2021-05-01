@@ -14,11 +14,12 @@ RUN apt-get update && \
 		g++ \
 		curl \
 		wget \
- 		libffi-dev \
+		libffi-dev \
 		libgmp-dev \
 		libssl-dev \
 		libsystemd-dev \
 		libtinfo-dev \
+		llvm-9* \
 		python3 \
 		zlib1g-dev && \
 	rm -rf /var/lib/apt/lists/*
