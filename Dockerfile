@@ -18,6 +18,7 @@ RUN apt-get update && \
 		libncursesw5 \
 		libtool \
 		make \
+		netbase \
 		pkg-config && \
 	rm -rf /var/lib/apt/lists/*
 
