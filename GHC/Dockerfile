@@ -8,8 +8,8 @@ ENV PATH="/root/.cabal/bin:${PATH}"
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
-		ghc \
 		cabal-install \
+		ghc \
 		git \
 		g++ \
 		curl \

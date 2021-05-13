@@ -6,8 +6,7 @@ You can find prebuilt images on [Dockerhub](https://hub.docker.com/repository/do
 
 ## Development Images
 
-This repository also contains a number of Dockerfiles that build images for specific development/compiling environments based on the Ubuntu base images.
+This repository also contains a number of Dockerfiles that build images for specific development/compilation environments based on the Ubuntu base images.
 
-* [Git Images](Git/README.md)
 * [GHC Development Images](GHC/README.md)
 * [Rust Development Images](Rust/README.md)
