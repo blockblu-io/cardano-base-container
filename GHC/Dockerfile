@@ -19,10 +19,14 @@ RUN apt-get update && \
         libssl-dev \
         libsystemd-dev \
         libtinfo-dev \
-        llvm-9* \
+        llvm-10* \
         python3 \
         zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/usr/lib/llvm-10/bin:$PATH"
+ENV CPLUS_INCLUDE_PATH="$(llvm-config --includedir):$CPLUS_INCLUDE_PATH"
+ENV LD_LIBRARY_PATH="$(llvm-config --libdir):$LD_LIBRARY_PATH"
 
 RUN cabal v2-update && \
     echo "" | cabal new-repl -w ghc-8.6.5 --build-dep fail && \
