@@ -4,10 +4,10 @@ FROM adalove/ubuntu:${C_UBUNTU_IMG}
 ARG RUST_VERSION
 
 RUN apt-get update && \
-	apt-get install -y --no-install-recommends \
-		curl \
-		wget && \
-	rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+        curl \
+        wget && \
+    rm -rf /var/lib/apt/lists/*
 
 ADD https://sh.rustup.rs rustup.sh
 RUN chmod +x  rustup.sh && \
