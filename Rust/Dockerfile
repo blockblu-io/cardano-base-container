@@ -5,7 +5,12 @@ ARG RUST_VERSION
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        autoconf \
+        automake \
+        build-essential \
         curl \
+        libtool \
+        make \
         wget && \
     rm -rf /var/lib/apt/lists/*
 
