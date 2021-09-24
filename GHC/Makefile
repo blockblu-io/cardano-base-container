@@ -6,8 +6,8 @@ amd64:
 		--build-arg CABAL_VERSION=${CABAL} \
 		--no-cache \
 		--pull \
-		-t "adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" .
-	docker push "adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64"
+		-t "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" .
+	docker push "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64"
 
 arm64:
 	docker build \
@@ -17,23 +17,23 @@ arm64:
 		--build-arg CABAL_VERSION=${CABAL} \
 		--no-cache \
 		--pull \
-		-t "adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64" .
-	docker push "adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
+		-t "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64" .
+	docker push "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
 
 manifest:
-	docker manifest create "adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}" \
-		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
-		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
-	docker manifest push --purge "adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}"
+	docker manifest create "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}" \
+		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
+		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
+	docker manifest push --purge "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}"
 
 manifest-latest:
-	docker manifest create "adalove/ubuntu:${UBUNTU}-ghc" \
-		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
-		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
-	docker manifest push --purge "adalove/ubuntu:${UBUNTU}-ghc"
-	docker manifest create "adalove/ubuntu:ghc" \
-		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
-		"adalove/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
-	docker manifest push --purge "adalove/ubuntu:ghc"
+	docker manifest create "blockblu/ubuntu:${UBUNTU}-ghc" \
+		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
+		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
+	docker manifest push --purge "blockblu/ubuntu:${UBUNTU}-ghc"
+	docker manifest create "blockblu/ubuntu:ghc" \
+		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
+		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
+	docker manifest push --purge "blockblu/ubuntu:ghc"
 
 all: amd64 arm64 manifest

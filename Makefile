@@ -4,8 +4,8 @@ amd64:
 		--build-arg C_UBUNTU_IMG=${UBUNTU} \
 		--no-cache \
 		--pull \
-		-t "adalove/ubuntu:${UBUNTU}_amd64" .
-	docker push "adalove/ubuntu:${UBUNTU}_amd64"
+		-t "blockblu/ubuntu:${UBUNTU}_amd64" .
+	docker push "blockblu/ubuntu:${UBUNTU}_amd64"
 
 arm64:
 	docker build \
@@ -13,13 +13,13 @@ arm64:
 		--build-arg C_UBUNTU_IMG=${UBUNTU} \
 		--no-cache \
 		--pull \
-		-t "adalove/ubuntu:${UBUNTU}_arm64" .
-	docker push "adalove/ubuntu:${UBUNTU}_arm64"
+		-t "blockblu/ubuntu:${UBUNTU}_arm64" .
+	docker push "blockblu/ubuntu:${UBUNTU}_arm64"
 
 manifest:
-	docker manifest create "adalove/ubuntu:${UBUNTU}" \
-		"adalove/ubuntu:${UBUNTU}_amd64" \
-		"adalove/ubuntu:${UBUNTU}_arm64"
-	docker manifest push --purge "adalove/ubuntu:${UBUNTU}"
+	docker manifest create "blockblu/ubuntu:${UBUNTU}" \
+		"blockblu/ubuntu:${UBUNTU}_amd64" \
+		"blockblu/ubuntu:${UBUNTU}_arm64"
+	docker manifest push --purge "blockblu/ubuntu:${UBUNTU}"
 
 all: amd64 arm64 manifest

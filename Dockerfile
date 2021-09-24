@@ -40,8 +40,8 @@ COPY --from=libsodiumBuilder /usr/local/lib /usr/local/lib
 ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 ENV PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-LABEL maintainer="Kevin Haller <keivn.haller@outofbits.com>"
+LABEL maintainer="Kevin Haller <keivn.haller@blockblu.io>"
 LABEL version="${C_UBUNTU_IMG}"
-LABEL description="Ubuntu ${C_UBUNTU_IMG} Image customized to be ready to run Cardano applications."
+LABEL description="Ubuntu ${C_UBUNTU_IMG} image customized to be ready to run Cardano applications."
 
 ENTRYPOINT [ "/bin/bash" ]

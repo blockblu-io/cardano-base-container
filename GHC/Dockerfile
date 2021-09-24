@@ -1,5 +1,5 @@
 ARG C_UBUNTU_IMG
-FROM adalove/ubuntu:${C_UBUNTU_IMG}
+FROM blockblu/ubuntu:${C_UBUNTU_IMG}
 
 ARG CABAL_VERSION
 ARG GHC_VERSION
@@ -45,8 +45,8 @@ RUN git clone https://gitlab.haskell.org/ghc/ghc.git && \
     rm -rf ../ghc
 
 # Documentation
-LABEL maintainer="Kevin Haller <keivn.haller@outofbits.com>"
+LABEL maintainer="Kevin Haller <keivn.haller@blockblu.io>"
 LABEL version="${C_UBUNTU_IMG}-ghc$GHC_VERSION-c$CABAL_VERSION"
-LABEL description="Ubuntu ${C_UBUNTU_IMG} Image ready to compile the Cardano Node."
+LABEL description="Ubuntu ${C_UBUNTU_IMG} image ready to compile the Cardano Node."
 
 ENTRYPOINT [ "ghci" ]

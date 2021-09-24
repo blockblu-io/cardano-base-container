@@ -2,7 +2,7 @@
 
 This repository provides a basic Dockerfile for creating Ubuntu images that have the IOHK fork of libsodium installed. Hence, it is ready to be used with `cardano-node` binaries, but also community tools such as `cncli`. 
 
-You can find prebuilt images on [Dockerhub](https://hub.docker.com/repository/docker/adalove/cncli). The tag of the latest build is `adalove/ubuntu`.
+You can find prebuilt images on [Dockerhub](https://hub.docker.com/repository/docker/blockblu/ubuntu). The tag of the latest build is `blockblu/ubuntu`.
 
 ## Development Images
 
@@ -18,4 +18,6 @@ This repository also contains a number of Dockerfiles that build images for spec
 
 ## Contributions
 
-Feel free to submit tickets and pull requests.
+Feel free to submit tickets and pull requests. This repository is maintained by:
+
+* [Kevin Haller](mailto:kevin.haller@blockblu.io) (Operator of the [SOBIT](https://staking.outofbits.com/) stake pool)

@@ -5,8 +5,8 @@ amd64:
     	--build-arg RUST_VERSION=${RUST} \
     	--no-cache \
     	--pull \
-    	-t "adalove/ubuntu:${UBUNTU}-rust${RUST}_amd64" .
-	docker push "adalove/ubuntu:${UBUNTU}-rust${RUST}_amd64"
+    	-t "blockblu/ubuntu:${UBUNTU}-rust${RUST}_amd64" .
+	docker push "blockblu/ubuntu:${UBUNTU}-rust${RUST}_amd64"
 
 arm64:
 	docker build \
@@ -15,23 +15,23 @@ arm64:
     	--build-arg RUST_VERSION=${RUST} \
     	--no-cache \
     	--pull \
-    	-t "adalove/ubuntu:${UBUNTU}-rust${RUST}_arm64" .
-	docker push "adalove/ubuntu:${UBUNTU}-rust${RUST}_arm64"
+    	-t "blockblu/ubuntu:${UBUNTU}-rust${RUST}_arm64" .
+	docker push "blockblu/ubuntu:${UBUNTU}-rust${RUST}_arm64"
 
 manifest:
-	docker manifest create "adalove/ubuntu:${UBUNTU}-rust${RUST}" \
-		"adalove/ubuntu:${UBUNTU}-rust${RUST}_amd64" \
-		"adalove/ubuntu:${UBUNTU}-rust${RUST}_arm64"
-	docker manifest push --purge "adalove/ubuntu:${UBUNTU}-rust${RUST}"
+	docker manifest create "blockblu/ubuntu:${UBUNTU}-rust${RUST}" \
+		"blockblu/ubuntu:${UBUNTU}-rust${RUST}_amd64" \
+		"blockblu/ubuntu:${UBUNTU}-rust${RUST}_arm64"
+	docker manifest push --purge "blockblu/ubuntu:${UBUNTU}-rust${RUST}"
 
 manifest-latest:
-	docker manifest create "adalove/ubuntu:${UBUNTU}-rust" \
-		"adalove/ubuntu:${UBUNTU}-rust${RUST}_amd64" \
-		"adalove/ubuntu:${UBUNTU}-rust${RUST}_arm64"
-	docker manifest push --purge "adalove/ubuntu:${UBUNTU}-rust"
-	docker manifest create "adalove/ubuntu:rust" \
-		"adalove/ubuntu:${UBUNTU}-rust${RUST}_amd64" \
-		"adalove/ubuntu:${UBUNTU}-rust${RUST}_arm64"
-	docker manifest push --purge "adalove/ubuntu:rust"
+	docker manifest create "blockblu/ubuntu:${UBUNTU}-rust" \
+		"blockblu/ubuntu:${UBUNTU}-rust${RUST}_amd64" \
+		"blockblu/ubuntu:${UBUNTU}-rust${RUST}_arm64"
+	docker manifest push --purge "blockblu/ubuntu:${UBUNTU}-rust"
+	docker manifest create "blockblu/ubuntu:rust" \
+		"blockblu/ubuntu:${UBUNTU}-rust${RUST}_amd64" \
+		"blockblu/ubuntu:${UBUNTU}-rust${RUST}_arm64"
+	docker manifest push --purge "blockblu/ubuntu:rust"
 
 all: amd64 arm64 manifest

@@ -1,5 +1,5 @@
 ARG C_UBUNTU_IMG
-FROM adalove/ubuntu:${C_UBUNTU_IMG}
+FROM blockblu/ubuntu:${C_UBUNTU_IMG}
 
 ARG RUST_VERSION
 
@@ -21,6 +21,6 @@ RUN chmod +x  rustup.sh && \
 ENV PATH="${PATH}:/root/.cargo/bin"
 
 # Documentation
-LABEL maintainer="Kevin Haller <keivn.haller@outofbits.com>"
+LABEL maintainer="Kevin Haller <keivn.haller@blockblu.io>"
 LABEL version="${C_UBUNTU_IMG}-rust${RUST_VERSION}"
-LABEL description="Ubuntu ${C_UBUNTU_IMG} Image with Rust ${RUST_VERSION} and Cardano-ready."
+LABEL description="Ubuntu ${C_UBUNTU_IMG} image with Rust ${RUST_VERSION} and Cardano-ready."
