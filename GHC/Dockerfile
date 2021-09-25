@@ -49,6 +49,6 @@ RUN git clone https://gitlab.haskell.org/ghc/ghc.git && \
 # Documentation
 LABEL maintainer="Kevin Haller <keivn.haller@blockblu.io>"
 LABEL version="${C_UBUNTU_IMG}-ghc$GHC_VERSION-c$CABAL_VERSION"
-LABEL description="Ubuntu ${C_UBUNTU_IMG} image ready to compile the Cardano Node."
+LABEL description="Ubuntu ${C_UBUNTU_IMG} image ready to compile cardano-node."
 
 ENTRYPOINT [ "ghci" ]
