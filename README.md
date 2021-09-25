@@ -13,8 +13,8 @@ This repository also contains a number of Dockerfiles that build images for spec
 
 ## Usage Examples
 
-* [CNCLI](https://github.com/outofbits/cncli-images)
-* [Cardano-Node](https://github.com/outofbits/cardano-node-docker)
+* [CNCLI](https://github.com/blockblu-io/cncli-container)
+* [Cardano-Node](https://github.com/blockblu-io/cardano-node-container)
 
 ## Contributions
 
