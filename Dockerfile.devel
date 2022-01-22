@@ -1,0 +1,49 @@
+ARG C_UBUNTU_IMG
+
+# helper image for building libsodium 
+FROM ubuntu:${C_UBUNTU_IMG} AS libsodiumBuilder
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        autoconf \
+        automake \
+        build-essential \
+        ca-certificates \
+        git \
+        libtool \
+        make \
+        pkg-config && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /
+RUN git clone https://github.com/input-output-hk/libsodium.git && \
+    cd libsodium && \
+    git checkout 66f017f1 --quiet
+
+RUN cd libsodium && \
+    ./autogen.sh && ./configure && \
+    make && make check && make install && \
+    rm -rf ../libsodium
+
+# main image
+FROM ubuntu:${C_UBUNTU_IMG}
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        netbase \
+        pkg-config && \
+    rm -rf /var/lib/apt/lists/*
+
+# lib files
+COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so /usr/lib64
+COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so.23 /usr/lib64
+COPY --from=libsodiumBuilder /usr/local/lib/libsodium.a /usr/lib64
+# header files
+RUN mkdir -p /usr/include/sodium
+COPY --from=libsodiumBuilder /usr/local/include/sodium.h /usr/include
+# pkgconfig
+RUN mkdir -p /usr/lib64/pkgconfig
+COPY --from=libsodiumBuilder /usr/local/lib/pkgconfig/libsodium.pc /usr/lib64/pkgconfig
+
+ENTRYPOINT [ "/bin/bash" ]
