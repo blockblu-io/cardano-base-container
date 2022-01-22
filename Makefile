@@ -41,9 +41,9 @@ manifest:
 	docker manifest push --purge "blockblu/ubuntu:$(UBUNTU)"
 
 manifest-devel:
-	docker manifest create "blockblu/ubuntu:$(UBUNTU)" \
-		"blockblu/ubuntu:$(UBUNTU)_amd64" \
-		"blockblu/ubuntu:$(UBUNTU)_arm64"
-	docker manifest push --purge "blockblu/ubuntu:$(UBUNTU)"
+	docker manifest create "blockblu/ubuntu:$(UBUNTU)-devel" \
+		"blockblu/ubuntu:$(UBUNTU)-devel_amd64" \
+		"blockblu/ubuntu:$(UBUNTU)-devel_arm64"
+	docker manifest push --purge "blockblu/ubuntu:$(UBUNTU)-devel"
 
 all: amd64 arm64 manifest
