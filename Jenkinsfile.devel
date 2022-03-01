@@ -41,7 +41,7 @@ pipeline {
                 script {
                     docker.withRegistry('', 'dockerhub-blockblu') {
                         sh "docker manifest create 'blockblu/ubuntu${version}-devel' 'blockblu/ubuntu:${version}-devel_amd64' 'blockblu/ubuntu:${version}-devel_arm64'"
-                        sh "docker push --purge 'blockblu/ubuntu${version}-devel'"
+                        sh "docker manifest push --purge 'blockblu/ubuntu${version}-devel'"
                     }
                 }
             }
