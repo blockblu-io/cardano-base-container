@@ -1,0 +1,69 @@
+pipeline {
+    agent { label 'docker' }
+    parameters {
+        string(name: "ubuntu_version", description: "Version of Ubuntu", defaultValue: "21.04")
+    }
+    stages {
+        stage('Get latest Rust version') {
+            agent { label 'linux' }
+            steps {
+                script {
+                    rust_version = sh(
+                        returnStdout: true,
+                        script: 'curl --silent "https://api.github.com/repos/rust-lang/rust/releases/latest" | grep -oE \'"tag_name":[[:space:]]"[0-9,.]+"\' | tr -dc "0-9,."'
+                    )
+                    echo "Rust version: ${rust_version}"
+                }
+            }
+        }
+        stage('Build Ubuntu Rust') {
+             parallel{
+                 stage('Build Ubuntu Rust / AMD64') {
+                    agent { label 'linux && amd64 && docker' }
+                    steps {
+                        git branch: 'master',
+                            credentialsId: 'github-sobitada',
+                            url: 'git@github.com:blockblu-io/cardano-base-container.git'
+                        dir("Rust"){
+                            script {
+                                docker.withRegistry('', 'dockerhub-blockblu') {
+                                    docker.build("blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_amd64", "--build-arg C_UBUNTU_IMG=${ubuntu_version} --build-arg RUST_VERSION=${rust_version} --no-cache --pull --platform linux/amd64 .").push()
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('Build Ubuntu Rust / ARM64') {
+                    agent { label 'linux && arm64 && docker' }
+                    steps {
+                        git branch: 'master',
+                            credentialsId: 'github-sobitada',
+                            url: 'git@github.com:blockblu-io/cardano-base-container.git'
+                        dir("Rust"){
+                            script {
+                                docker.withRegistry('', 'dockerhub-blockblu') {
+                                    docker.build("blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_arm64", "--build-arg C_UBUNTU_IMG=${ubuntu_version} --build-arg RUST_VERSION=${rust_version} --no-cache --pull --platform linux/arm64 .").push()
+                                }
+                            }
+                        }
+                    }
+                }
+             }
+        }
+        stage('Create and Push Manifest') {
+            agent { label 'linux && docker' }
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub-blockblu') {
+                            sh "docker manifest create 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}' 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_amd64' 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_arm64'"
+                            sh "docker manifest create 'blockblu/ubuntu:${ubuntu_version}-rust' 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_amd64' 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_arm64'"
+                            sh "docker manifest create 'blockblu/ubuntu:rust' 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_amd64' 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}_arm64'"
+                            sh "docker manifest push --purge 'blockblu/ubuntu:${ubuntu_version}-rust${rust_version}'"
+                            sh "docker manifest push --purge 'blockblu/ubuntu:${ubuntu_version}-rust'"
+                            sh "docker manifest push --purge 'blockblu/ubuntu:rust'"
+                    }
+                }
+            }
+        }
+    }
+}
