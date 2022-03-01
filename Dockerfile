@@ -25,6 +25,8 @@ RUN cd libsodium && \
     make && make check && make install && \
     rm -rf ../libsodium
 
+ENTRYPOINT [ "/bin/bash" ]
+
 # main image
 FROM ubuntu:${C_UBUNTU_IMG}
 
@@ -35,10 +37,7 @@ RUN apt-get update && \
         pkg-config && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=libsodiumBuilder /usr/local/lib /usr/local/lib
-
-ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
-ENV PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
+COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so.23 /usr/lib
 
 LABEL maintainer="Kevin Haller <keivn.haller@blockblu.io>"
 LABEL version="${C_UBUNTU_IMG}"
