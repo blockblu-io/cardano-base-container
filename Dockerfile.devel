@@ -36,14 +36,18 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # lib files
-COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so /usr/lib64
-COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so.23 /usr/lib64
-COPY --from=libsodiumBuilder /usr/local/lib/libsodium.a /usr/lib64
+COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so /usr/lib
+COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so.23 /usr/lib
+COPY --from=libsodiumBuilder /usr/local/lib/libsodium.a /usr/lib
 # header files
 RUN mkdir -p /usr/include/sodium
 COPY --from=libsodiumBuilder /usr/local/include/sodium.h /usr/include
 # pkgconfig
-RUN mkdir -p /usr/lib64/pkgconfig
-COPY --from=libsodiumBuilder /usr/local/lib/pkgconfig/libsodium.pc /usr/lib64/pkgconfig
+RUN mkdir -p /usr/lib/pkgconfig
+COPY --from=libsodiumBuilder /usr/local/lib/pkgconfig/libsodium.pc /usr/lib/pkgconfig
+
+LABEL maintainer="Kevin Haller <keivn.haller@blockblu.io>"
+LABEL version="${C_UBUNTU_IMG}"
+LABEL description="Ubuntu ${C_UBUNTU_IMG} image customized to be ready to compile Cardano applications."
 
 ENTRYPOINT [ "/bin/bash" ]
