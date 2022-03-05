@@ -1,0 +1,59 @@
+pipeline {
+    agent { label 'docker' }
+    parameters {
+        string(name: "ubuntu_version", description: "Version of Ubuntu", defaultValue: "20.04")
+        string(name: "ghc_version", description: "Version of GHC", defaultValue: "8.10.7")
+        string(name: "cabal_version", description: "Version of Cabal", defaultValue: "3.4")
+    }
+    stages {
+        stage('Build Ubuntu GHC') {
+             parallel{
+                 stage('Build Ubuntu GHC / AMD64') {
+                    agent { label 'linux && amd64 && docker' }
+                    steps {
+                        git branch: 'master',
+                            credentialsId: 'github-sobitada',
+                            url: 'git@github.com:blockblu-io/cardano-base-container.git'
+                        dir("GHC"){
+                            script {
+                                docker.withRegistry('', 'dockerhub-blockblu') {
+                                    docker.build("blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}-c${cabal_version}_amd64", "--build-arg C_UBUNTU_IMG=${ubuntu_version} --build-arg GHC_VERSION=${ghc_version} --build-arg CABAL_VERSION=${cabal_version} --no-cache --pull --platform linux/amd64 .").push()
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('Build Ubuntu GHC / ARM64') {
+                    agent { label 'linux && arm64 && docker' }
+                    steps {
+                        git branch: 'master',
+                            credentialsId: 'github-sobitada',
+                            url: 'git@github.com:blockblu-io/cardano-base-container.git'
+                        dir("GHC"){
+                            script {
+                                docker.withRegistry('', 'dockerhub-blockblu') {
+                                    docker.build("blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}-c${cabal_version}_arm64", "--build-arg C_UBUNTU_IMG=${ubuntu_version} --build-arg GHC_VERSION=${ghc_version} --build-arg CABAL_VERSION=${cabal_version} --no-cache --pull --platform linux/arm64 .").push()
+                                }
+                            }
+                        }
+                    }
+                }
+             }
+        }
+        stage('Create and Push Manifest') {
+            agent { label 'linux && docker' }
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub-blockblu') {
+                            sh "docker manifest create 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}-c${cabal_version}' 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}-c${cabal_version}_amd64' 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}-c${cabal_version}_arm64'"
+                            sh "docker manifest create 'blockblu/ubuntu:${ubuntu_version}-ghc' 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}_amd64' 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}_arm64'"
+                            sh "docker manifest create 'blockblu/ubuntu:ghc' 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}_amd64' 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}_arm64'"
+                            sh "docker manifest push --purge 'blockblu/ubuntu:${ubuntu_version}-ghc${ghc_version}-c${cabal_version}'"
+                            sh "docker manifest push --purge 'blockblu/ubuntu:${ubuntu_version}-ghc'"
+                            sh "docker manifest push --purge 'blockblu/ubuntu:ghc'"
+                    }
+                }
+            }
+        }
+    }
+}

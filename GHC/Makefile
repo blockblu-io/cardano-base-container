@@ -7,7 +7,7 @@ amd64:
 		--no-cache \
 		--pull \
 		-t "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" .
-	docker push "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64"
+#	docker push "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64"
 
 arm64:
 	docker build \
@@ -18,7 +18,7 @@ arm64:
 		--no-cache \
 		--pull \
 		-t "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64" .
-	docker push "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
+#	docker push "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
 
 manifest:
 	docker manifest create "blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}" \
@@ -34,6 +34,6 @@ manifest-latest:
 	docker manifest create "blockblu/ubuntu:ghc" \
 		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_amd64" \
 		"blockblu/ubuntu:${UBUNTU}-ghc${GHC}-c${CABAL}_arm64"
-	docker manifest push --purge "blockblu/ubuntu:ghc"
+#	docker manifest push --purge "blockblu/ubuntu:ghc"
 
 all: amd64 arm64 manifest

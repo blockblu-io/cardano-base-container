@@ -1,5 +1,5 @@
 ARG C_UBUNTU_IMG
-FROM blockblu/ubuntu:${C_UBUNTU_IMG}
+FROM blockblu/ubuntu:${C_UBUNTU_IMG}-devel
 
 ARG CABAL_VERSION
 ARG GHC_VERSION
