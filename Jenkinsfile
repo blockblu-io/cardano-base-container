@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'docker' }
     parameters {
-        string(name: "version", description: "Version of Ubuntu", defaultValue: "21.04")
+        string(name: "version", description: "Version of Ubuntu", defaultValue: "20.04")
     }
 
     stages {
