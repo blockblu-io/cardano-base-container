@@ -1,10 +1,10 @@
 ARG C_UBUNTU_IMG
 
 # helper image for building libsodium 
-FROM ubuntu:${C_UBUNTU_IMG} AS libsodiumBuilder
+FROM ubuntu:${C_UBUNTU_IMG} AS libBuilder
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
         autoconf \
         automake \
         build-essential \
@@ -12,39 +12,68 @@ RUN apt-get update && \
         git \
         libtool \
         make \
-        pkg-config && \
-    rm -rf /var/lib/apt/lists/*
+        pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
-RUN git clone https://github.com/input-output-hk/libsodium.git && \
-    cd libsodium && \
-    git checkout 66f017f1 --quiet
 
-RUN cd libsodium && \
-    ./autogen.sh && ./configure && \
-    make && make check && make install && \
-    rm -rf ../libsodium
+RUN git clone https://github.com/input-output-hk/libsodium.git \
+    && cd libsodium \
+    && git checkout -f 66f017f1 --quiet \
+    && ./autogen.sh \
+    && ./configure --disable-silent-rules --disable-opt \
+    && make \
+    && make check \
+    && make install \
+    && rm -rf ../libsodium
+
+RUN git clone https://github.com/blockblu-io/secp256k1.git \
+    && cd secp256k1 \
+    && git checkout -f ac83be33 --quiet \
+    && ./autogen.sh \
+    && ./configure --disable-silent-rules \
+            --disable-opt \
+            --enable-module-schnorrsig \
+            --enable-experimental \
+    && make \
+    && make check \
+    && make install \
+    && rm -rf ../secp256k1
+
+RUN ls /usr/local/include
 
 # main image
 FROM ubuntu:${C_UBUNTU_IMG}
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
         ca-certificates \
         netbase \
-        pkg-config && \
-    rm -rf /var/lib/apt/lists/*
+        pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
 # lib files
-COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so /usr/lib
-COPY --from=libsodiumBuilder /usr/local/lib/libsodium.so.23 /usr/lib
-COPY --from=libsodiumBuilder /usr/local/lib/libsodium.a /usr/lib
+# a) libsodium
+COPY --from=libBuilder /usr/local/lib/libsodium.so /usr/lib
+COPY --from=libBuilder /usr/local/lib/libsodium.so.23 /usr/lib
+COPY --from=libBuilder /usr/local/lib/libsodium.a /usr/lib
+# b) libsecp256k1
+COPY --from=libBuilder /usr/local/lib/libsecp256k1.so /usr/lib
+COPY --from=libBuilder /usr/local/lib/libsecp256k1.so.0 /usr/lib
+COPY --from=libBuilder /usr/local/lib/libsecp256k1.a /usr/lib
 # header files
+# a) libsodium
 RUN mkdir -p /usr/include/sodium
-COPY --from=libsodiumBuilder /usr/local/include/sodium.h /usr/include
+COPY --from=libBuilder /usr/local/include/sodium.h /usr/include
+# b) libsecp256k1
+COPY --from=libBuilder /usr/local/include/secp256k1.h /usr/include
+COPY --from=libBuilder /usr/local/include/secp256k1_extrakeys.h /usr/include
+COPY --from=libBuilder /usr/local/include/secp256k1_preallocated.h /usr/include
+COPY --from=libBuilder /usr/local/include/secp256k1_schnorrsig.h /usr/include
 # pkgconfig
 RUN mkdir -p /usr/lib/pkgconfig
-COPY --from=libsodiumBuilder /usr/local/lib/pkgconfig/libsodium.pc /usr/lib/pkgconfig
+COPY --from=libBuilder /usr/local/lib/pkgconfig/libsodium.pc /usr/lib/pkgconfig
+COPY --from=libBuilder /usr/local/lib/pkgconfig/libsecp256k1.pc /usr/lib/pkgconfig
 
 LABEL maintainer="Kevin Haller <keivn.haller@blockblu.io>"
 LABEL version="${C_UBUNTU_IMG}"
