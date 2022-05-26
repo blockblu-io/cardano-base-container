@@ -40,8 +40,6 @@ RUN git clone https://github.com/blockblu-io/secp256k1.git \
     && make install \
     && rm -rf ../secp256k1
 
-RUN ls /usr/local/include
-
 # main image
 FROM ubuntu:${C_UBUNTU_IMG}
 
